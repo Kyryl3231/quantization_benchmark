@@ -5,7 +5,8 @@ import warnings
 import logging
 import os
 
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer
+# from transformers import BitsAndBytesConfig
 from datasets import disable_progress_bars
 
 from quant_bench.config import Config

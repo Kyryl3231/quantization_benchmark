@@ -17,9 +17,9 @@ from quant_bench.config import Config, load_config
 from quant_bench.evaluation.mmlu import evaluate_mmlu
 from quant_bench.evaluation.speed import evaluate_generation_speed
 from quant_bench.evaluation.vram import measure_vram_usage, reset_vram_stats
-from quant_bench.models.load_awq import load_awq_model_and_tokenizer
+# from quant_bench.models.load_awq import load_awq_model_and_tokenizer
 from quant_bench.models.load_baseline import load_baseline_model_and_tokenizer
-from quant_bench.models.load_bnb import load_bitsandbytes_model_and_tokenizer
+# from quant_bench.models.load_bnb import load_bitsandbytes_model_and_tokenizer
 from quant_bench.models.load_gptq import load_gptq_model_and_tokenizer
 from quant_bench.utils.system_info import gather_run_metadata
 

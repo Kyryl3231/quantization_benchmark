@@ -5,7 +5,7 @@ from typing import Any
 
 from datasets import Dataset, load_dataset
 from llmcompressor import oneshot
-from llmcompressor.modifiers.awq import AWQModifier
+# from llmcompressor.modifiers.awq import AWQModifier
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 

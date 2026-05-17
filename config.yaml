@@ -26,5 +26,5 @@ bitsandbytes:
   quant_name: "nf4"  # options: fp16, int8, nf4
 
 gptq:
-  bits: 8
+  bits: 4
   calibration_max_length: 512
