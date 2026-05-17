@@ -7,8 +7,8 @@ project:
   env_path: .env
 
 models:
-  # baseline_model_id: Qwen/Qwen3-0.6B
-  baseline_model_id: meta-llama/Llama-3.2-1B-Instruct
+  baseline_model_id: Qwen/Qwen3-0.6B
+  # baseline_model_id: meta-llama/Llama-3.2-1B-Instruct
 
 benchmark:
   mode: quick
