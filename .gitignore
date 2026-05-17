@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.cache/
+results/
+.venv/
+.env
+.ipynb_checkpoints/
+*_old.py
+*_copy.py
+*_copy.txt
