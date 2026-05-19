@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "config": {
+      "awq": {
+        "calibration_max_length": 512,
+        "zero_point": true
+      },
+      "benchmark": {
+        "do_sample": false,
+        "few_shot_k": 5,
+        "max_new_tokens": 64,
+        "mode": "full",
+        "prompt_count": 16,
+        "quick_limit": 3
+      },
+      "bitsandbytes": {
+        "quant_name": "nf4"
+      },
+      "gptq": {
+        "bits": 8,
+        "calibration_max_length": 512
+      },
+      "models": {
+        "baseline_model_id": "Qwen/Qwen3-0.6B"
+      },
+      "project": {
+        "cache_dir": ".cache",
+        "device": "auto",
+        "env_path": ".env",
+        "name": "quantization-benchmark",
+        "output_dir": "results",
+        "seed": 42
+      }
+    },
+    "cuda_available": true,
+    "cuda_version": "13.0",
+    "gpu_count": 1,
+    "gpu_name": "Tesla T4",
+    "hostname": "e86f25955fab",
+    "llmcompressor_version": "0.10.0.2",
+    "model_tag": "gptq",
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
+    "project": "quantization-benchmark",
+    "python_version": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+    "release": "6.6.122+",
+    "seed": 42,
+    "system": "Linux",
+    "timestamp_utc": "2026-05-17T20:35:12.145655+00:00",
+    "torch_version": "2.12.0+cu130"
+  },
+  "mmlu": {
+    "accuracy": 0.47357926221335994,
+    "total": 14042
+  },
+  "speed": {
+    "average_latency_seconds": 5.888059344000794,
+    "elapsed_seconds": 5.888850202001777,
+    "generated_tokens": 64,
+    "prompt_count": 1,
+    "tokens_per_second": 10.867995925290254
+  },
+  "vram": {
+    "current_allocated_gb": 0.7333230972290039,
+    "model_present": true,
+    "peak_allocated_gb": 3.3922648429870605,
+    "peak_reserved_gb": 5.53515625
+  }
+}
