@@ -24,14 +24,15 @@ def load_awq_model_and_tokenizer(config: Config):
 
     model = AutoModelForCausalLM.from_pretrained(
         source,
-        torch_dtype=torch.float16,
+        dtype=torch.float16,
         device_map="cuda",
     )
 
     dataset = load_dataset(path="wikitext", name="wikitext-2-raw-v1", split="train")
     calibration_data = dataset.filter(
         lambda x: len(x["text"].strip()) > 50
-    ).take(32)  # TODO: remove
+    ).take(128)  # TODO: remove
+    print(f"Calibration data: {len(calibration_data)} samples")
 
     recipe = [
         # Step 1: AWQ calibration / scaling (transform stage)
@@ -61,7 +62,7 @@ def load_awq_model_and_tokenizer(config: Config):
     # quantized_model = AutoModelForCausalLM.from_pretrained(
     #     output_dir,
     #     device_map="auto",
-    #     torch_dtype=torch.float16,
+    #     dtype=torch.float16,
     #     trust_remote_code=True,
     #     # safetensors=True,
     # )
