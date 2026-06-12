@@ -12,7 +12,7 @@ models:
 
 benchmark:
   mode: quick
-  quick_limit: 3  # per-subject limit for MMLU
+  quick_limit: 40  # per-subject limit for MMLU
   prompt_count: 16
   max_new_tokens: 64
   do_sample: false  # false for greedy decoding
