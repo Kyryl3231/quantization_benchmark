@@ -49,6 +49,7 @@ def load_awq_model_and_tokenizer(config: Config):
     output_dir = Path(config.project.cache_dir) / f"{config.project.name}-awq"
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    print(f"Model takes {model.get_memory_footprint()/1e9:.2f} GBs of GPU RAM.")
 
     quantized_model = oneshot(
         model=model,
@@ -59,6 +60,9 @@ def load_awq_model_and_tokenizer(config: Config):
         output_dir=output_dir,
     )
     
+    print(f"Quantized model takes {quantized_model.get_memory_footprint()/1e9:.2f} GBs of GPU RAM.")
+
+
     # quantized_model = AutoModelForCausalLM.from_pretrained(
     #     output_dir,
     #     device_map="auto",
