@@ -7,10 +7,6 @@ from quant_bench.config import Config
 
 
 def patch_optimum_gptq_missing_hf_device_map() -> None:
-    """
-    Workaround for Optimum/GPTQModel packing on models that do not expose
-    model.hf_device_map during pack_model().
-    """
     from optimum.gptq.quantizer import GPTQQuantizer
 
     if getattr(GPTQQuantizer, "_quant_bench_hf_device_map_patch", False):
@@ -20,18 +16,7 @@ def patch_optimum_gptq_missing_hf_device_map() -> None:
 
     def patched_pack_model(self, model, quantizers):
         if not hasattr(model, "hf_device_map"):
-            try:
-                device = next(model.parameters()).device
-            except StopIteration:
-                device = torch.device(
-                    "cuda:0" if torch.cuda.is_available() else "cpu")
-
-            if device.type == "cuda":
-                mapped_device = device.index if device.index is not None else 0
-            else:
-                mapped_device = "cpu"
-
-            model.hf_device_map = {"": mapped_device}
+            model.hf_device_map = {"": 0}
             print("Patched missing model.hf_device_map:", model.hf_device_map)
 
         return original_pack_model(self, model, quantizers)
@@ -63,6 +48,10 @@ def load_wikitext2_calibration_dataset(num_samples: int = 128) -> list[str]:
 
 
 def load_gptq_model_and_tokenizer(config: Config):
+    if not torch.cuda.is_available():
+        raise RuntimeError(
+            "GPTQModel inference requires CUDA, but torch.cuda.is_available() is False.")
+
     patch_optimum_gptq_missing_hf_device_map()
 
     output_dir = Path(config.project.cache_dir) / f"{config.project.name}-gptq"
@@ -92,19 +81,27 @@ def load_gptq_model_and_tokenizer(config: Config):
     model = AutoModelForCausalLM.from_pretrained(
         config.models.baseline_model_id,
         quantization_config=gptq_config,
-        device_map="auto",
+        device_map={"": 0},
         torch_dtype="auto",
     )
 
     model.eval()
 
+    # Keep model on CUDA for GPTQModel Triton kernels.
+    model.to("cuda:0")
+
+    print("Model device after GPTQ:", next(model.parameters()).device)
+
+    # Optional save. Do not move to CPU before returning.
     try:
-        model.to("cpu")
         model.save_pretrained(output_dir)
         tokenizer.save_pretrained(output_dir)
         print("Saved GPTQ model to:", output_dir)
     except Exception as exc:
-        print("Warning: GPTQ model saving failed, but quantized model was created.")
+        print("Warning: GPTQ model saving failed, but continuing with CUDA model.")
         print("Save error:", repr(exc))
+
+    model.to("cuda:0")
+    model.eval()
 
     return model, tokenizer
