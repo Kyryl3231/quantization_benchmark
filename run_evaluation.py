@@ -1,4 +1,14 @@
 from __future__ import annotations
+import transformers
+import torch
+import numpy as np
+from quant_bench.utils.system_info import gather_run_metadata
+from quant_bench.evaluation.vram import measure_vram_usage, reset_vram_stats
+from quant_bench.evaluation.speed import evaluate_generation_speed
+from quant_bench.evaluation.mmlu import evaluate_mmlu
+from quant_bench.config import Config, load_config
+from quant_bench.models.load_baseline import load_baseline_model_and_tokenizer
+from quant_bench.models.load_gptq import load_gptq_model_and_tokenizer
 
 import argparse
 import json
@@ -13,46 +23,39 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from quant_bench.config import Config, load_config
-from quant_bench.evaluation.mmlu import evaluate_mmlu
-from quant_bench.evaluation.speed import evaluate_generation_speed
-from quant_bench.evaluation.vram import measure_vram_usage, reset_vram_stats
-from quant_bench.models.load_awq import load_awq_model_and_tokenizer
-from quant_bench.models.load_baseline import load_baseline_model_and_tokenizer
-from quant_bench.models.load_bnb import load_bitsandbytes_model_and_tokenizer
-from quant_bench.models.load_gptq import load_gptq_model_and_tokenizer
-from quant_bench.utils.system_info import gather_run_metadata
-
-import numpy as np
-import torch
-import transformers
 
 # For debugging
 transformers.logging.set_verbosity_info()
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Benchmark quantization methods.")
-    parser.add_argument("--config", default="config.yaml", help="Path to YAML config file.")
-    parser.add_argument("--mode", choices=["quick", "full"], default=None, help="Override benchmark mode.")
+    parser = argparse.ArgumentParser(
+        description="Benchmark quantization methods.")
+    parser.add_argument("--config", default="config.yaml",
+                        help="Path to YAML config file.")
+    parser.add_argument(
+        "--mode", choices=["quick", "full"], default=None, help="Override benchmark mode.")
     parser.add_argument(
         "--quantization-method",
         choices=["all", "awq", "gptq", "bitsandbytes"],
         default=None,
         help="Quantization method to benchmark.",
     )
-    parser.add_argument("--smoke-test", action="store_true", help="Force a tiny quick run.")
+    parser.add_argument("--smoke-test", action="store_true",
+                        help="Force a tiny quick run.")
     return parser.parse_args()
 
 
 def ensure_parent_dir(path_str: str) -> None:
-    Path(path_str).expanduser().resolve().parent.mkdir(parents=True, exist_ok=True)
+    Path(path_str).expanduser().resolve().parent.mkdir(
+        parents=True, exist_ok=True)
 
 
 def write_json(path_str: str, payload: dict[str, Any]) -> None:
     path = Path(path_str)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    path.write_text(json.dumps(payload, indent=2,
+                    sort_keys=True), encoding="utf-8")
 
 
 def compare_metrics(baseline: dict[str, Any], awq: dict[str, Any]) -> dict[str, Any]:
@@ -84,7 +87,7 @@ def run_single_benchmark(config: Config, *, quantization_method: str) -> dict[st
     vram_result = measure_vram_usage(model)
     metadata = gather_run_metadata(config, model_tag=quantization_method)
 
-    result =  {
+    result = {
         "metadata": metadata,
         "mmlu": mmlu_result,
         "speed": speed_result,
@@ -103,7 +106,8 @@ def print_summary(name: str, result: dict[str, Any]) -> None:
     print(f"\n[{name}]")
     print(f"  MMLU accuracy: {result['mmlu']['accuracy']:.4f}")
     print(f"  Speed: {result['speed']['tokens_per_second']:.2f} tokens/sec")
-    print(f"  VRAM: {result['vram']['peak_allocated_gb']:.3f} GB peak allocated")
+    print(
+        f"  VRAM: {result['vram']['peak_allocated_gb']:.3f} GB peak allocated")
 
 
 def main() -> int:
@@ -125,7 +129,8 @@ def main() -> int:
         config.benchmark.mode = "quick"
         config.benchmark.quick_limit = min(config.benchmark.quick_limit, 8)
         config.benchmark.prompt_count = min(config.benchmark.prompt_count, 4)
-        config.benchmark.max_new_tokens = min(config.benchmark.max_new_tokens, 16)
+        config.benchmark.max_new_tokens = min(
+            config.benchmark.max_new_tokens, 16)
 
     run_single_benchmark(config, quantization_method="baseline")
 
@@ -134,8 +139,9 @@ def main() -> int:
         run_single_benchmark(config, quantization_method="gptq")
         run_single_benchmark(config, quantization_method="awq")
     elif args.quantization_method is not None:
-        run_single_benchmark(config, quantization_method=args.quantization_method)
-    
+        run_single_benchmark(
+            config, quantization_method=args.quantization_method)
+
     return 0
 
 

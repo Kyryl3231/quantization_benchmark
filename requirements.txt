@@ -1,24 +1,18 @@
-# PyPI + PyTorch CUDA wheels
 --extra-index-url https://download.pytorch.org/whl/cu128
 
-# Build helpers
 pip
 setuptools
 wheel
 ninja
 packaging
 
-# PyTorch CUDA stack
 torch==2.11.0
 torchvision==0.26.0
 torchaudio==2.11.0
 
-# Hugging Face GPTQ stack
 accelerate==1.13.0
 datasets==4.8.5
 optimum==2.1.0
 transformers==5.8.1
 gptqmodel==7.0.0
-
-# Project deps
 python-dotenv==1.2.2
