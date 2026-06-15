@@ -34,47 +34,47 @@ def load_awq_model_and_tokenizer(config: Config):
     ).take(128)  # TODO: remove
     print(f"Calibration data: {len(calibration_data)} samples")
     
-    qwen_awq_mappings = [
-        AWQMapping(
-            smooth_layer="re:.*input_layernorm",
-            balance_layers=[
-                "re:.*self_attn\\.q_proj", 
-                "re:.*self_attn\\.k_proj", 
-                "re:.*self_attn\\.v_proj"
-            ],
-        ),
-        AWQMapping(
-            smooth_layer="re:.*post_attention_layernorm",
-            balance_layers=[
-                "re:.*mlp\\.gate_proj", 
-                "re:.*mlp\\.up_proj"
-            ],
-        ),
-    ]
-
-    recipe = [
-        AWQModifier(
-            mappings=qwen_awq_mappings,
-            duo_scaling="both"
-        ),
-        QuantizationModifier(
-            targets=["Linear"], 
-            scheme="W4A16", 
-            ignore=["lm_head"] # Leave the output head unquantized
-        ),
-    ]
-
-    # recipe = [
-    #     # Step 1: AWQ calibration / scaling (transform stage)
-    #     AWQModifier(),
-
-    #     # Step 2: INT4 quantization
-    #     QuantizationModifier(
-    #         targets=["Linear"],
-    #         scheme="W4A16",
-    #         ignore=["lm_head"],
+    # qwen_awq_mappings = [
+    #     AWQMapping(
+    #         smooth_layer="re:.*input_layernorm",
+    #         balance_layers=[
+    #             "re:.*self_attn\\.q_proj", 
+    #             "re:.*self_attn\\.k_proj", 
+    #             "re:.*self_attn\\.v_proj"
+    #         ],
+    #     ),
+    #     AWQMapping(
+    #         smooth_layer="re:.*post_attention_layernorm",
+    #         balance_layers=[
+    #             "re:.*mlp\\.gate_proj", 
+    #             "re:.*mlp\\.up_proj"
+    #         ],
     #     ),
     # ]
+
+    # recipe = [
+    #     AWQModifier(
+    #         mappings=qwen_awq_mappings,
+    #         duo_scaling="both"
+    #     ),
+    #     QuantizationModifier(
+    #         targets=["Linear"], 
+    #         scheme="W4A16", 
+    #         ignore=["lm_head"] # Leave the output head unquantized
+    #     ),
+    # ]
+
+    recipe = [
+        # Step 1: AWQ calibration / scaling (transform stage)
+        AWQModifier(),
+
+        # Step 2: INT4 quantization
+        QuantizationModifier(
+            targets=["Linear"],
+            scheme="W4A16",
+            ignore=["lm_head"],
+        ),
+    ]
 
     output_dir = Path(config.project.cache_dir) / f"{config.project.name}-awq"
     output_dir.mkdir(parents=True, exist_ok=True)

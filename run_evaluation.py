@@ -18,9 +18,9 @@ from quant_bench.evaluation.mmlu import evaluate_mmlu
 from quant_bench.evaluation.speed import evaluate_generation_speed
 from quant_bench.evaluation.vram import measure_vram_usage, reset_vram_stats
 from quant_bench.models.load_awq import load_awq_model_and_tokenizer
-# from quant_bench.models.load_baseline import load_baseline_model_and_tokenizer
-# from quant_bench.models.load_bnb import load_bitsandbytes_model_and_tokenizer
-# from quant_bench.models.load_gptq import load_gptq_model_and_tokenizer
+from quant_bench.models.load_baseline import load_baseline_model_and_tokenizer
+from quant_bench.models.load_bnb import load_bitsandbytes_model_and_tokenizer
+from quant_bench.models.load_gptq import load_gptq_model_and_tokenizer
 from quant_bench.utils.system_info import gather_run_metadata
 
 import numpy as np
@@ -127,7 +127,7 @@ def main() -> int:
         config.benchmark.prompt_count = min(config.benchmark.prompt_count, 4)
         config.benchmark.max_new_tokens = min(config.benchmark.max_new_tokens, 16)
 
-    # run_single_benchmark(config, quantization_method="baseline")
+    run_single_benchmark(config, quantization_method="baseline")
 
     if args.quantization_method == "all":
         run_single_benchmark(config, quantization_method="bitsandbytes")
