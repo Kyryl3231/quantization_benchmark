@@ -9,7 +9,7 @@
         "do_sample": false,
         "few_shot_k": 5,
         "max_new_tokens": 64,
-        "mode": "quick",
+        "mode": "full",
         "prompt_count": 16,
         "quick_limit": 40
       },
@@ -21,7 +21,7 @@
         "calibration_max_length": 512
       },
       "models": {
-        "baseline_model_id": "Qwen/Qwen3-0.6B"
+        "baseline_model_id": "meta-llama/Llama-3.2-1B-Instruct"
       },
       "project": {
         "cache_dir": ".cache",
@@ -36,8 +36,8 @@
     "cuda_version": "12.8",
     "gpu_count": 1,
     "gpu_name": "Tesla T4",
-    "hostname": "29ba4146d087",
-    "llmcompressor_version": null,
+    "hostname": "13416a3b8c52",
+    "llmcompressor_version": "0.11.0",
     "model_tag": "awq",
     "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
     "project": "quantization-benchmark",
@@ -45,24 +45,24 @@
     "release": "6.6.122+",
     "seed": 42,
     "system": "Linux",
-    "timestamp_utc": "2026-05-17T18:47:24.221820+00:00",
-    "torch_version": "2.10.0+cu128"
+    "timestamp_utc": "2026-06-12T23:41:00.964657+00:00",
+    "torch_version": "2.11.0+cu128"
   },
   "mmlu": {
-    "accuracy": 0.43024523873884,
-    "total": 2280
+    "accuracy": 0.43263067939040023,
+    "total": 14042
   },
   "speed": {
-    "average_latency_seconds": 6.66378800651360,
-    "elapsed_seconds": 6.7559899992966,
+    "average_latency_seconds": 4.1161259159998735,
+    "elapsed_seconds": 4.116539987999204,
     "generated_tokens": 64,
     "prompt_count": 1,
-    "tokens_per_second": 9.112680549613067
+    "tokens_per_second": 15.547037120148675
   },
   "vram": {
-    "current_allocated_gb": 0.7800415039305154,
+    "current_allocated_gb": 2.3250088691711426,
     "model_present": true,
-    "peak_allocated_gb": 3.4778755856227494,
-    "peak_reserved_gb": 5.53202185
+    "peak_allocated_gb": 5.859870910644531,
+    "peak_reserved_gb": 10.275390625
   }
 }
