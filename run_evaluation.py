@@ -127,8 +127,6 @@ def main() -> int:
         config.benchmark.prompt_count = min(config.benchmark.prompt_count, 4)
         config.benchmark.max_new_tokens = min(config.benchmark.max_new_tokens, 16)
 
-    run_single_benchmark(config, quantization_method="baseline")
-
     if args.quantization_method == "all":
         run_single_benchmark(config, quantization_method="bitsandbytes")
         run_single_benchmark(config, quantization_method="gptq")
